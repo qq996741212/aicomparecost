@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prompting for AI Video: What Actually Changes the Output | AI Tools Lab</title>
+<meta name="description" content="After hundreds of AI video generations, here&#x27;s which parts of a prompt actually move the result — and the elaborate prompt frameworks that don&#x27;t do anything.">
+<link rel="canonical" href="https://aicomparecost.com/posts/ai-video-prompt-guide.html">
+<meta property="og:title" content="Prompting for AI Video: What Actually Changes the Output | AI Tools Lab">
+<meta property="og:description" content="After hundreds of AI video generations, here&#x27;s which parts of a prompt actually move the result — and the elaborate prompt frameworks that don&#x27;t do anything.">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--muted:#666;--line:#e6e6e6;--brand:#2563eb;--soft:#f6f8fb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+     font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+header{border-bottom:1px solid var(--line);padding:18px 0;background:#fff}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;color:var(--fg);text-decoration:none}
+nav a{margin-left:18px;color:var(--muted);text-decoration:none;font-size:15px}
+nav a:hover{color:var(--brand)}
+.hero{padding:52px 0 30px;border-bottom:1px solid var(--line);background:var(--soft)}
+.hero h1{font-size:34px;line-height:1.25;margin:0 0 12px}
+.hero p{color:var(--muted);font-size:18px;margin:0}
+main{padding:38px 0 60px;min-height:50vh}
+article h1{font-size:31px;line-height:1.3;margin:0 0 10px}
+.meta{color:var(--muted);font-size:14px;margin-bottom:26px}
+h2{font-size:24px;margin:38px 0 12px}
+h3{font-size:19px;margin:28px 0 10px}
+p{margin:0 0 17px}
+ul,ol{margin:0 0 17px;padding-left:24px}
+li{margin-bottom:7px}
+a{color:var(--brand)}
+img{max-width:100%;height:auto;border-radius:8px;margin:18px 0}
+pre{background:#f6f6f6;padding:15px;border-radius:8px;overflow-x:auto;font-size:14px}
+code{background:#f2f2f2;padding:2px 6px;border-radius:4px;font-size:15px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left}
+th{background:var(--soft);font-weight:600}
+blockquote{border-left:3px solid var(--brand);margin:20px 0;padding:4px 0 4px 18px;color:var(--muted)}
+.card{border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:14px}
+.card h3{margin:0 0 6px;font-size:19px}
+.card h3 a{text-decoration:none}
+.card p{color:var(--muted);font-size:15px;margin:0}
+footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-size:14px}
+footer a{color:var(--muted);margin-right:16px}
+.ad{margin:26px 0;padding:14px;border:1px dashed var(--line);text-align:center;color:#999;font-size:13px}
+@media(max-width:640px){.hero h1{font-size:27px}article h1{font-size:25px}body{font-size:16px}}
+</style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1881843055016510" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Prompting for AI Video: What Actually Changes the Output", "description": "After hundreds of AI video generations, here's which parts of a prompt actually move the result — and the elaborate prompt frameworks that don't do anything.", "datePublished": "2026-09-19", "dateModified": "2026-09-19", "mainEntityOfPage": "https://aicomparecost.com/posts/ai-video-prompt-guide.html"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do \"8K\" and \"cinematic\" help video prompts?", "acceptedAnswer": {"@type": "Answer", "text": "In my testing, no — they did nothing measurable and occasionally hurt. Concrete camera and lighting language is what actually moves results."}}, {"@type": "Question", "name": "How long should an AI video prompt be?", "acceptedAnswer": {"@type": "Answer", "text": "Shorter than you think. A clear sentence or two covering subject, motion, camera, and lighting outperformed long structured prompts. If it's longer than a few sentences, you're probably adding noise."}}, {"@type": "Question", "name": "Why do I need to say \"static camera\" twice?", "acceptedAnswer": {"@type": "Answer", "text": "Because models are trained on real footage, which rarely has a truly locked-off camera, so \"static\" drifts toward \"slightly moving.\" Repeating it — and saying \"no camera movement\" — reinforces the concept."}}, {"@type": "Question", "name": "Does image-to-video need different prompting?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, and usually simpler. When you start from a still, the subject and composition are already decided, so the prompt mainly describes motion and camera. Focus there."}}]}</script>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="logo" href="/">AI Tools Lab</a>
+  <nav><a href="/">Home</a><a href="/blog/">Blog</a><a href="/about.html">About</a><a href="/contact.html">Contact</a></nav>
+</div></header>
+<main><div class="wrap"><article><h1>Prompting for AI Video: What Actually Changes the Output</h1><div class="meta">2026-09-19 · Alex</div><p>Most AI video prompting advice is recycled from image prompting, and most of it doesn't transfer. Video models respond to a different vocabulary, ignore a lot of what image models reward, and punish a surprising number of "quality" words.</p>
+<p>After generating hundreds of clips and changing one variable at a time, here's what actually changes the output — and what's just decoration.</p>
+<h2>What Moves the Result</h2>
+<h3>Camera language, more than anything</h3>
+<p>The single most reliable lever in AI video prompting is describing the camera. Models are trained on real footage, and real footage has an implied camera — locked off, dollying, handheld, panning. Naming it changes the output more than any adjective.</p>
+<p>Specific and reliable:</p>
+<ul><li><strong>"Static camera / locked-off shot"</strong> — keeps the frame still (though you</li></ul>
+<p>usually need to say it twice; see below)</p>
+<ul><li><strong>"Slow dolly in"</strong> — a slow, stable push toward the subject</li><li><strong>"Slow pan right"</strong> — a controlled horizontal sweep</li><li><strong>"Subtle handheld"</strong> — a gentle, natural documentary feel</li></ul>
+<h3>Lighting and time of day</h3>
+<p>Concrete physical lighting beats quality adjectives every time. "Golden hour, warm side light from the left, soft shadows" produces a visibly different, usually better result than "cinematic lighting." Lighting direction and time of day are specific enough for the model to lock onto.</p>
+<h3>Motion description, kept simple</h3>
+<p>Describe <em>what moves</em> and leave it at that. "A woman walks slowly across the frame, camera static" works. "A dynamic, energetic, fast-paced scene with everything in motion" produces mush — you've asked for too much motion with too little specificity.</p>
+<p>The rule that held up: <strong>one primary motion, simply stated.</strong> When I asked for multiple simultaneous motions, coherence fell apart almost every time.</p>
+<h3>Subject and setting, concretely</h3>
+<p>"A grey cat on a wooden table" outperforms "an adorable cat in a cozy scene." The former gives the model something to anchor; the latter gives it adjectives to interpret. Specific nouns and concrete locations win.</p>
+<h2>What Does Almost Nothing</h2><div class="ad"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1881843055016510" data-ad-slot="6615719621" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>
+<h3>Quality adjectives</h3>
+<p>"8K, masterpiece, ultra-detailed, award-winning, cinematic, stunning" — in my testing, these did nothing measurable. Sometimes they <em>hurt</em>, likely because they push the model toward a vague "impressive" average rather than a specific image. Image prompting culture is full of these; video models don't reward them.</p>
+<h3>Long negative prompt lists</h3>
+<p>A short negative prompt for a known artifact is useful ("no text, no watermark"). A fifty-item negative list is noise. Each negative term is another constraint the model has to satisfy, and past a handful they start conflicting.</p>
+<h3>Elaborate prompt frameworks</h3>
+<p>The multi-paragraph structured prompts popular in some communities — with bracketed sections, weights, and role descriptions — produced no better results than a clear sentence or two. The value was in the clarity, not the framework.</p>
+<h3>Vague emotional direction</h3>
+<p>"Make it feel epic" or "give it a sad mood" does little, because the model doesn't know what those mean visually. If you want a mood, describe what it <em>looks</em> like: rain, dim light, slow movement, muted colors.</p>
+<h2>The Prompt Structure That Worked</h2>
+<p>After stripping away what didn't matter, my effective prompts converged on a simple four-part shape:</p>
+<pre><code>[Subject and what it&#x27;s doing] + [camera behaviour] + [lighting / time of day] + [setting]</code></pre>
+<p>Example: "A woman walks slowly across a rain-soaked street, camera static, cool blue light, night, wet reflections on the ground."</p>
+<p>That's it. No adjectives, no framework, no weights. Every element is specific and visual.</p>
+<h2>What Didn't Work</h2>
+<p><strong>Redundancy as a substitute for specificity.</strong> Saying "static" three ways helps <em>for camera</em>, because the model averages toward motion otherwise. But the same trick doesn't work for other concepts — "very very detailed, extremely detailed" just becomes noise.</p>
+<p><strong>Copying image prompts into video.</strong> Image prompts lean on composition and style descriptors that video models handle differently. The transfer failed more than it worked.</p>
+<p><strong>Expecting the model to read long prompts.</strong> Very long prompts produced outputs that cherry-picked elements and dropped the rest. Short and specific beat long and thorough.</p>
+<p><strong>Iterating only on the prompt.</strong> When a clip failed, my instinct was to tweak wording. The bigger levers were often structural: clip duration, camera behaviour, and whether I generated from a still image or from text. Sometimes the prompt was fine and the <em>workflow</em> was wrong.</p>
+<h2>Verdict</h2>
+<p>The prompt that works is <strong>short, concrete, and physical</strong>: what's moving, how the camera behaves, what the light is doing, where it happens.</p>
+<p>The prompt that wastes your time is <strong>long, adjective-heavy, and vague</strong>: quality words, frameworks, and emotional direction that the model can't anchor to.</p>
+<p>The single most transferable lesson: <strong>describe what a camera would see, not how you want the viewer to feel.</strong></p>
+<h2>FAQ</h2>
+<p><strong>Do "8K" and "cinematic" help video prompts?</strong> In my testing, no — they did nothing measurable and occasionally hurt. Concrete camera and lighting language is what actually moves results.</p>
+<p><strong>How long should an AI video prompt be?</strong> Shorter than you think. A clear sentence or two covering subject, motion, camera, and lighting outperformed long structured prompts. If it's longer than a few sentences, you're probably adding noise.</p>
+<p><strong>Why do I need to say "static camera" twice?</strong> Because models are trained on real footage, which rarely has a truly locked-off camera, so "static" drifts toward "slightly moving." Repeating it — and saying "no camera movement" — reinforces the concept.</p>
+<p><strong>Does image-to-video need different prompting?</strong> Yes, and usually simpler. When you start from a still, the subject and composition are already decided, so the prompt mainly describes motion and camera. Focus there.</p><div style="margin-top:40px;padding:20px;background:#f6f8fb;border-radius:10px"><h2 style="font-size:20px;margin:0 0 12px">Related Articles</h2><p style="margin:6px 0"><a href="/posts/ai-video-looks-wrong-fixes.html">Why Your AI Video Looks Wrong (And 6 Fixes That Actually Work)</a></p><p style="margin:6px 0"><a href="/posts/ai-video-workflow-save-money.html">Stop Wasting Money on AI Video: A Workflow That Actually Works</a></p><p style="margin:6px 0"><a href="/posts/ai-video-cost-breakdown.html">AI Video Generation Costs: Where the Money Actually Goes</a></p></div></article></div></main>
+<footer><div class="wrap">
+  <div>&copy; 2026 AI Tools Lab</div>
+  <div style="margin-top:8px">
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/privacy.html">Privacy Policy</a>
+  </div>
+</div></footer>
+</body>
+</html>
