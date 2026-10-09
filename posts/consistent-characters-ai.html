@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Generate Consistent Characters with AI (Without Melting Faces) | AI Tools Lab</title>
+<meta name="description" content="A practical workflow for keeping one character looking like the same person across dozens of AI images — plus why faces melt and how to stop it.">
+<link rel="canonical" href="https://aicomparecost.com/posts/consistent-characters-ai.html">
+<meta property="og:title" content="How to Generate Consistent Characters with AI (Without Melting Faces) | AI Tools Lab">
+<meta property="og:description" content="A practical workflow for keeping one character looking like the same person across dozens of AI images — plus why faces melt and how to stop it.">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--muted:#666;--line:#e6e6e6;--brand:#2563eb;--soft:#f6f8fb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+     font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+header{border-bottom:1px solid var(--line);padding:18px 0;background:#fff}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;color:var(--fg);text-decoration:none}
+nav a{margin-left:18px;color:var(--muted);text-decoration:none;font-size:15px}
+nav a:hover{color:var(--brand)}
+.hero{padding:52px 0 30px;border-bottom:1px solid var(--line);background:var(--soft)}
+.hero h1{font-size:34px;line-height:1.25;margin:0 0 12px}
+.hero p{color:var(--muted);font-size:18px;margin:0}
+main{padding:38px 0 60px;min-height:50vh}
+article h1{font-size:31px;line-height:1.3;margin:0 0 10px}
+.meta{color:var(--muted);font-size:14px;margin-bottom:26px}
+h2{font-size:24px;margin:38px 0 12px}
+h3{font-size:19px;margin:28px 0 10px}
+p{margin:0 0 17px}
+ul,ol{margin:0 0 17px;padding-left:24px}
+li{margin-bottom:7px}
+a{color:var(--brand)}
+img{max-width:100%;height:auto;border-radius:8px;margin:18px 0}
+pre{background:#f6f6f6;padding:15px;border-radius:8px;overflow-x:auto;font-size:14px}
+code{background:#f2f2f2;padding:2px 6px;border-radius:4px;font-size:15px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left}
+th{background:var(--soft);font-weight:600}
+blockquote{border-left:3px solid var(--brand);margin:20px 0;padding:4px 0 4px 18px;color:var(--muted)}
+.card{border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:14px}
+.card h3{margin:0 0 6px;font-size:19px}
+.card h3 a{text-decoration:none}
+.card p{color:var(--muted);font-size:15px;margin:0}
+footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-size:14px}
+footer a{color:var(--muted);margin-right:16px}
+.ad{margin:26px 0;padding:14px;border:1px dashed var(--line);text-align:center;color:#999;font-size:13px}
+@media(max-width:640px){.hero h1{font-size:27px}article h1{font-size:25px}body{font-size:16px}}
+</style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1881843055016510" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to Generate Consistent Characters with AI (Without Melting Faces)", "description": "A practical workflow for keeping one character looking like the same person across dozens of AI images — plus why faces melt and how to stop it.", "datePublished": "2026-09-19", "dateModified": "2026-09-19", "mainEntityOfPage": "https://aicomparecost.com/posts/consistent-characters-ai.html"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I get a character that's consistent across images and video?", "acceptedAnswer": {"@type": "Answer", "text": "Increasingly yes, though video adds temporal coherence on top and is considerably harder. Same principle applies: establish a still reference first."}}, {"@type": "Question", "name": "Does this work for non-human characters?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, and it's notably easier — stylized characters have looser perceptual constraints than human faces, so more deviation is tolerated."}}, {"@type": "Question", "name": "Why does consistency get worse with more images?", "acceptedAnswer": {"@type": "Answer", "text": "Cumulative drift if you chain generations. Returning to the anchor each time avoids it entirely."}}, {"@type": "Question", "name": "Is there a tool that just handles this automatically?", "acceptedAnswer": {"@type": "Answer", "text": "Several offer dedicated \"character\" or consistency features, and they're improving. Under the hood they're doing the same thing described above — the usable ones mainly save you the manual steps."}}]}</script>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="logo" href="/">AI Tools Lab</a>
+  <nav><a href="/">Home</a><a href="/blog/">Blog</a><a href="/about.html">About</a><a href="/contact.html">Contact</a></nav>
+</div></header>
+<main><div class="wrap"><article><h1>How to Generate Consistent Characters with AI (Without Melting Faces)</h1><div class="meta">2026-09-19 · Alex</div><p>You need thirty images of the same person. You generate thirty images and get thirty people who are sort of the same, sort of not — the hair is right in some, the face shape drifts in others, and two are clearly somebody else entirely.</p>
+<p>Character consistency is the single most requested and most frustrating thing in AI image generation. Here's what actually works, what doesn't, and why your faces keep melting.</p>
+<h2>Why Faces Melt in the First Place</h2>
+<p>Faces are where our perceptual standards are highest. Humans have dedicated neural hardware for reading faces, so we detect tiny deviations instantly, while the same magnitude of error in a landscape goes completely unnoticed.</p>
+<p>Two things compound on top of that:</p>
+<p><strong>Anatomy is hard.</strong> A face has dozens of tightly constrained features whose relative positions we know extremely well. Small positional errors read as "wrong" even when each individual feature is fine.</p>
+<p><strong>Detail density is high.</strong> High-frequency texture — skin pores, individual hairs, teeth — is exactly what these models handle least reliably, and it's all concentrated in one small region.</p>
+<p>This is why "melting" shows up most when subjects move, turn, or speak. You're asking the model to maintain high-precision structure through a transformation.</p>
+<h2>The Core Principle: Establish Once, Then Reference</h2><div class="ad"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1881843055016510" data-ad-slot="6615719621" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>
+<p>Everything that works follows from one idea: <strong>generate your character once, properly, and use that output as the anchor for everything after.</strong></p>
+<p>Trying to describe the same person in thirty separate prompts will never be consistent, because each description gets interpreted slightly differently. A reference image isn't interpreted — it's copied from.</p>
+<h3>Step 1: Generate the anchor image, carefully</h3>
+<p>Spend real time here. This image determines every image after it.</p>
+<p>Use a neutral setup: <strong>even front lighting, plain background, head and shoulders, neutral expression.</strong> Avoid dramatic angles, extreme emotion, and busy backgrounds in the anchor — those choices get baked into every subsequent generation and limit what you can do later.</p>
+<p>Generate candidates, then pick the one you'd be happy to see in thirty images. Don't settle here.</p>
+<h3>Step 2: Use image-to-image, not text-to-image</h3>
+<p>Once you have the anchor, every subsequent image should start from it, either via a reference-image input or by uploading to an editing interface. This is the single biggest lever, and it's much bigger than any prompting technique.</p>
+<h3>Step 3: Describe changes, not the person</h3>
+<p>Once the anchor is supplied, your prompt describes <em>what's different</em> — setting, pose, clothing, lighting, expression — rather than re-describing the character. Re-describing invites reinterpretation, which is precisely what you're trying to avoid.</p>
+<h3>Step 4: Build outward from the anchor</h3>
+<p>When you need variations, generate ones closest to the anchor first and chain outward gradually. Each step carries the identity forward with less drift than jumping straight from anchor to extreme pose.</p>
+<h3>Step 5: Keep a reference sheet</h3>
+<p>Save your anchor, your best outputs, and the working prompt somewhere retrievable. You'll need it again in three weeks, and reconstructing it is genuinely painful.</p>
+<h2>Specific Artifact Fixes</h2>
+<table><thead><tr><th>Problem</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td>Face changes between images</td><td>No reference image being used</td><td>Always condition on the anchor</td></tr><tr><td>Features distort at angles</td><td>Extreme pose too far from anchor</td><td>Build up through intermediate angles</td></tr><tr><td>Waxy, plastic skin</td><td>Over-smoothed defaults</td><td>Add texture/imperfection language to prompt</td></tr><tr><td>Extra or merged teeth</td><td>Detail generation failure</td><td>Avoid open-mouth smiles; or repair in post</td></tr><tr><td>Hands near the face are broken</td><td>Hands generally</td><td>Pose hands away from face, or out of frame</td></tr><tr><td>Identity drifts over many images</td><td>Long generation chains</td><td>Return to the anchor rather than chaining from the latest</td></tr></tbody></table>
+<h2>What Didn't Work</h2>
+<p><strong>Writing extremely detailed textual descriptions.</strong> My instinct was that more description equals more consistency. It doesn't — each adjective is another interpretation opportunity, and twenty adjectives means twenty chances to drift. The reference image does work that description fundamentally can't.</p>
+<p><strong>Expecting costume changes to be free.</strong> Swapping clothing while keeping the face was surprisingly unreliable, because clothing carries a lot of the identity signal. If you need costume variety, generate separate anchors per outfit rather than trying to vary one.</p>
+<p><strong>Long chains of successive generations.</strong> Generating from your most recent output drifts over time — each step inherits a little error and adds its own. Always go back to the original anchor.</p>
+<p><strong>Prompt templates promising perfect consistency.</strong> Every one I tried produced roughly what you'd get from a plain prompt plus a reference image. The value is in the workflow, not the magic wording.</p>
+<p><strong>Trying to fix a bad anchor later.</strong> A weak anchor propagates its weaknesses into everything downstream. Fix it at step 1 or accept it everywhere.</p>
+<h2>Verdict</h2>
+<p>The reliable recipe: <strong>one strong neutral anchor image → every subsequent image conditioned on it → prompts that describe changes rather than the person → return to the anchor instead of chaining.</strong></p>
+<p>The most common failure isn't technical at all. It's rushing the anchor.</p>
+<h2>FAQ</h2>
+<p><strong>Can I get a character that's consistent across images and video?</strong> Increasingly yes, though video adds temporal coherence on top and is considerably harder. Same principle applies: establish a still reference first.</p>
+<p><strong>Does this work for non-human characters?</strong> Yes, and it's notably easier — stylized characters have looser perceptual constraints than human faces, so more deviation is tolerated.</p>
+<p><strong>Why does consistency get worse with more images?</strong> Cumulative drift if you chain generations. Returning to the anchor each time avoids it entirely.</p>
+<p><strong>Is there a tool that just handles this automatically?</strong> Several offer dedicated "character" or consistency features, and they're improving. Under the hood they're doing the same thing described above — the usable ones mainly save you the manual steps.</p><div style="margin-top:40px;padding:20px;background:#f6f8fb;border-radius:10px"><h2 style="font-size:20px;margin:0 0 12px">Related Articles</h2><p style="margin:6px 0"><a href="/posts/ai-tools-without-vpn-regional-guide.html">AI Tools That Work Without a VPN: A Regional Access Guide</a></p><p style="margin:6px 0"><a href="/posts/cheapest-ai-image-generation-at-scale.html">The Cheapest Way to Run AI Image Generation at Scale (Without Quality Collapse)</a></p></div></article></div></main>
+<footer><div class="wrap">
+  <div>&copy; 2026 AI Tools Lab</div>
+  <div style="margin-top:8px">
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/privacy.html">Privacy Policy</a>
+  </div>
+</div></footer>
+</body>
+</html>
