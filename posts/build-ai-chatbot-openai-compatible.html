@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Building an AI Chatbot With OpenAI-Compatible APIs | AI Tools Lab</title>
+<meta name="description" content="A step-by-step guide to building your own AI chatbot on an OpenAI-compatible API — from the first working reply to a production-ready assistant with context and fallbacks.">
+<link rel="canonical" href="https://aicomparecost.com/posts/build-ai-chatbot-openai-compatible.html">
+<meta property="og:title" content="Building an AI Chatbot With OpenAI-Compatible APIs | AI Tools Lab">
+<meta property="og:description" content="A step-by-step guide to building your own AI chatbot on an OpenAI-compatible API — from the first working reply to a production-ready assistant with context and fallbacks.">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--muted:#666;--line:#e6e6e6;--brand:#2563eb;--soft:#f6f8fb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+     font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+header{border-bottom:1px solid var(--line);padding:18px 0;background:#fff}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;color:var(--fg);text-decoration:none}
+nav a{margin-left:18px;color:var(--muted);text-decoration:none;font-size:15px}
+nav a:hover{color:var(--brand)}
+.hero{padding:52px 0 30px;border-bottom:1px solid var(--line);background:var(--soft)}
+.hero h1{font-size:34px;line-height:1.25;margin:0 0 12px}
+.hero p{color:var(--muted);font-size:18px;margin:0}
+main{padding:38px 0 60px;min-height:50vh}
+article h1{font-size:31px;line-height:1.3;margin:0 0 10px}
+.meta{color:var(--muted);font-size:14px;margin-bottom:26px}
+h2{font-size:24px;margin:38px 0 12px}
+h3{font-size:19px;margin:28px 0 10px}
+p{margin:0 0 17px}
+ul,ol{margin:0 0 17px;padding-left:24px}
+li{margin-bottom:7px}
+a{color:var(--brand)}
+img{max-width:100%;height:auto;border-radius:8px;margin:18px 0}
+pre{background:#f6f6f6;padding:15px;border-radius:8px;overflow-x:auto;font-size:14px}
+code{background:#f2f2f2;padding:2px 6px;border-radius:4px;font-size:15px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left}
+th{background:var(--soft);font-weight:600}
+blockquote{border-left:3px solid var(--brand);margin:20px 0;padding:4px 0 4px 18px;color:var(--muted)}
+.card{border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:14px}
+.card h3{margin:0 0 6px;font-size:19px}
+.card h3 a{text-decoration:none}
+.card p{color:var(--muted);font-size:15px;margin:0}
+footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-size:14px}
+footer a{color:var(--muted);margin-right:16px}
+.ad{margin:26px 0;padding:14px;border:1px dashed var(--line);text-align:center;color:#999;font-size:13px}
+@media(max-width:640px){.hero h1{font-size:27px}article h1{font-size:25px}body{font-size:16px}}
+</style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1881843055016510" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Building an AI Chatbot With OpenAI-Compatible APIs", "description": "A step-by-step guide to building your own AI chatbot on an OpenAI-compatible API — from the first working reply to a production-ready assistant with context and fallbacks.", "datePublished": "2026-09-20", "dateModified": "2026-09-20", "mainEntityOfPage": "https://aicomparecost.com/posts/build-ai-chatbot-openai-compatible.html"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What do I need to build a chatbot?", "acceptedAnswer": {"@type": "Answer", "text": "Very little — a language model API (OpenAI-compatible), and the ability to make an HTTP request and manage a message list. The minimal loop is a few dozen lines."}}, {"@type": "Question", "name": "How do I keep costs down?", "acceptedAnswer": {"@type": "Answer", "text": "Route simple queries to a cheap model and reserve the expensive one for hard queries. Also manage history aggressively — unbounded history is the most common source of cost creep."}}, {"@type": "Question", "name": "Do I need tool use for a useful chatbot?", "acceptedAnswer": {"@type": "Answer", "text": "No. Most useful chatbots are just good system prompts plus good history management. Add tool use only when the bot needs to look things up or act."}}, {"@type": "Question", "name": "Can I switch models later without rewriting?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, if you build on the OpenAI-compatible shape — changing the base URL and key switches providers, and a router lets you do it per-request. That flexibility is the main reason to build this way."}}]}</script>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="logo" href="/">AI Tools Lab</a>
+  <nav><a href="/">Home</a><a href="/blog/">Blog</a><a href="/about.html">About</a><a href="/contact.html">Contact</a></nav>
+</div></header>
+<main><div class="wrap"><article><h1>Building an AI Chatbot With OpenAI-Compatible APIs</h1><div class="meta">2026-09-20 · Alex</div><p>Building a chatbot used to mean either paying for a no-code platform that locks you in, or wrestling with a provider's proprietary SDK. The rise of the OpenAI-compatible API changed that: you can now build a capable chatbot in a few hundred lines, against a standard you can point at any model.</p>
+<p>Here's the full path from "it replies" to "it's actually useful."</p>
+<h2>Why Build on OpenAI-Compatible APIs</h2>
+<p>The reason is leverage. The OpenAI-compatible chat completion shape — send a list of messages, get a reply — is supported by almost every provider. Write your chatbot once against that shape, and you can swap the underlying model by changing a base URL and a key.</p>
+<p>This matters for three reasons: <strong>cost control</strong> (route cheap models for simple queries, expensive ones for hard ones), <strong>resilience</strong> (fall back to another provider when one fails), and <strong>no lock-in</strong> (switch providers without rewriting).</p>
+<h2>The Minimal Working Chatbot</h2><div class="ad"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1881843055016510" data-ad-slot="6615719621" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>
+<p>The core loop is small. In concept:</p>
+<pre><code>messages = [{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;You are a helpful assistant.&quot;}]
+
+loop:
+    user_input = read_input()
+    messages.append({&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: user_input})
+    reply = chat_completion(model, messages)   # via base_url + api_key
+    messages.append({&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: reply})
+    print(reply)</code></pre>
+<p>That's the entire structure of a chatbot. Everything beyond this is about making it <em>useful</em> and <em>reliable</em>, not making it work.</p>
+<h2>What Takes It From Demo to Useful</h2>
+<h3>1. A real system prompt</h3>
+<p>The system message is where you define the assistant's behavior, tone, and constraints. This is the single highest-leverage thing you can write. Be specific: what it is, what it should and shouldn't do, how it should respond.</p>
+<h3>2. Conversation history management</h3>
+<p>You can't send the whole history forever — there's a context limit, and cost grows with every message. Keep a window of recent messages, and summarize or drop older ones. This is where most simple chatbots quietly fall apart at scale.</p>
+<h3>3. Streaming for responsiveness</h3>
+<p>Users perceive a slow chatbot as broken. Streaming the reply token by token — which the OpenAI-compatible format supports — makes the chatbot feel instant even when the model is slow.</p>
+<h3>4. Error handling and fallbacks</h3>
+<p>Models fail, rate limits hit, providers have outages. A simple retry and a fallback to a second provider turn these from user-facing failures into non-events.</p>
+<h3>5. Tool use (if you need it)</h3>
+<p>If your chatbot needs to look things up or take actions, the OpenAI-compatible format supports function calling. This is where divergence between providers shows up most, so test it against each provider you use.</p>
+<h2>The Architecture That Scales</h2>
+<p>As it grows, a clean chatbot separates into a few pieces:</p>
+<table><thead><tr><th>Piece</th><th>Job</th></tr></thead><tbody><tr><td>Router</td><td>Choose model/provider per request (cost, capability)</td></tr><tr><td>Context manager</td><td>Trim and manage message history</td></tr><tr><td>Tools</td><td>Function calling for lookups and actions</td></tr><tr><td>Fallback layer</td><td>Retry, switch provider, degrade gracefully</td></tr><tr><td>UI</td><td>Whatever the user actually talks through</td></tr></tbody></table>
+<p>The router and fallback layer are what make it production-grade: they let you use cheap models for simple queries and keep things working when one provider fails.</p>
+<h2>What Didn't Work</h2>
+<p><strong>Unbounded message history.</strong> My first version sent the full history every turn. Cost grew linearly and it eventually broke on context limits. A history window with summarization fixed both.</p>
+<p><strong>Ignoring streaming.</strong> The non-streaming version felt broken even when it worked, because the user waited in silence. Streaming changed the perceived quality dramatically with almost no code.</p>
+<p><strong>No fallback.</strong> The first provider outage produced a hard failure. A simple try-next-provider fallback made outages invisible. Build it before you need it.</p>
+<p><strong>Assuming tool use "just works."</strong> Function calling was the least standardized part of the "compatible" API. I had to test and adapt per provider. Don't assume; verify.</p>
+<p><strong>Over-engineering the system prompt.</strong> A giant prompt made the bot slower and not much better. Specific and concise beats exhaustive — the model follows a few clear rules better than fifty vague ones.</p>
+<h2>Verdict</h2>
+<p>Start with the minimal loop, then add the four things that make it real: <strong>a specific system prompt, history management, streaming, and fallbacks.</strong> Add tool use only if the job requires it, and verify it against each provider.</p>
+<p>The OpenAI-compatible abstraction is the quiet win here — it turns "which model do I build on" from an architectural decision into a config value, and that flexibility is worth more than any single model choice.</p>
+<h2>FAQ</h2>
+<p><strong>What do I need to build a chatbot?</strong> Very little — a language model API (OpenAI-compatible), and the ability to make an HTTP request and manage a message list. The minimal loop is a few dozen lines.</p>
+<p><strong>How do I keep costs down?</strong> Route simple queries to a cheap model and reserve the expensive one for hard queries. Also manage history aggressively — unbounded history is the most common source of cost creep.</p>
+<p><strong>Do I need tool use for a useful chatbot?</strong> No. Most useful chatbots are just good system prompts plus good history management. Add tool use only when the bot needs to look things up or act.</p>
+<p><strong>Can I switch models later without rewriting?</strong> Yes, if you build on the OpenAI-compatible shape — changing the base URL and key switches providers, and a router lets you do it per-request. That flexibility is the main reason to build this way.</p><div style="margin-top:40px;padding:20px;background:#f6f8fb;border-radius:10px"><h2 style="font-size:20px;margin:0 0 12px">Related Articles</h2><p style="margin:6px 0"><a href="/posts/openai-compatible-api-multiple-models.html">How to Use an OpenAI-Compatible API to Call Multiple Models</a></p></div></article></div></main>
+<footer><div class="wrap">
+  <div>&copy; 2026 AI Tools Lab</div>
+  <div style="margin-top:8px">
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/privacy.html">Privacy Policy</a>
+  </div>
+</div></footer>
+</body>
+</html>
